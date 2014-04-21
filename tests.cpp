@@ -42,8 +42,7 @@ void check_agrega_dos_elementos_correctamente()
 
 	ASSERT_EQ(messi.tamanio(), 2);
 
-	int alabando = messi.adeptoAlabando();
-	ASSERT_EQ(alabando, 5);
+	ASSERT_EQ(messi.adeptoAlabando(), 5);
 }
 
 void check_alabar_a_messi_tres_elementos()
@@ -55,20 +54,16 @@ void check_alabar_a_messi_tres_elementos()
 	messi.golDeMessi(adepto2);
 	messi.golDeMessi(adepto3);
 
-	int alabando = messi.adeptoAlabando();
-	ASSERT_EQ(alabando, 1);
+	ASSERT_EQ(messi.adeptoAlabando(), 1);
 
 	messi.alabarMessi();
-	alabando = messi.adeptoAlabando();
-	ASSERT_EQ(alabando, 2);
+	ASSERT_EQ(messi.adeptoAlabando(), 2);
 
 	messi.alabarMessi();
-	alabando = messi.adeptoAlabando();
-	ASSERT_EQ(alabando, 3);
+	ASSERT_EQ(messi.adeptoAlabando(), 3);
 
 	messi.alabarMessi();
-	alabando = messi.adeptoAlabando();
-	ASSERT_EQ(alabando, 1);	
+	ASSERT_EQ(messi.adeptoAlabando(), 1);	
 }
 
 void check_elimina_adepto_no_alabador()
@@ -106,12 +101,27 @@ void check_elimina_adepto_alabador()
 
 	ASSERT_EQ(messi.tamanio(), 2);
 
-	int alabando = messi.adeptoAlabando();
-	ASSERT_EQ(alabando, 2);
+	ASSERT_EQ(messi.adeptoAlabando(), 2);
 
 	messi.alabarMessi();
-	alabando = messi.adeptoAlabando();
-	ASSERT_EQ(alabando, 3);
+	ASSERT_EQ(messi.adeptoAlabando(), 3);
+}
+
+void check_olvide_alabarlo_un_poco_mas()
+{
+	Messineria<int> messi;
+	messi.adeptoAlabando()
+	messi.golDeMessi(adepto1);
+	messi.golDeMessi(adepto2);
+	messi.golDeMessi(adepto3);
+
+	messi.alabarMessi();
+
+	ASSERT_EQ(messi.adeptoAlabando(), 2);
+
+	messi.olvideAlabarloUnPocoMas();
+
+	ASSERT_EQ(messi.adeptoAlabando(), 1);	
 }
 
 int main() {	
@@ -121,6 +131,7 @@ int main() {
   RUN_TEST(check_alabar_a_messi_tres_elementos);
   RUN_TEST(check_elimina_adepto_no_alabador);
   RUN_TEST(check_elimina_adepto_alabador);
+  RUN_TEST(check_olvide_alabarlo_un_poco_mas);
+ 
   return 0;
 }
-

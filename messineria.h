@@ -295,8 +295,9 @@ const T& Messineria<T>::alabarMessi()
  * 
  */
 template<class T>
-void Messineria<T>::olvideAlabarloUnPocoMas() {
-
+void Messineria<T>::olvideAlabarloUnPocoMas() 
+{
+	ptrAlabando = ptrAlabando->ptrAnterior;
 }
 
 /*
