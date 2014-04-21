@@ -355,7 +355,7 @@ void Messineria<T>::interrumpirTurno() {
 template<class T>
 const T& Messineria<T>::dameElegido() const
 {
-
+	return ptrElegido->tAdepto;
 }	
 
 /*
