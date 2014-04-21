@@ -1,4 +1,9 @@
-algo2-tplabo
+Messineria
 ============
 
-1c 2014
+AyED II - 1c 2014
+
+Para correr los tests:
+
+$ g++ tests.cpp -o tests
+$ ./tests
