@@ -243,6 +243,11 @@ void Messineria<T>::golDeCristiano(const T& tSale)
 	if (ptrAlabando == ptrSale) {
 		this->alabarMessi();
 	}
+
+	if (ptrElegido == ptrSale) {
+		bElegido = false;
+		ptrElegido = NULL;
+	}
 	
 	nodoAdepto* ptrAnteriorSale = ptrSale->ptrAnterior;
 	nodoAdepto* ptrProximoSale = ptrSale->ptrProximo;	
@@ -306,8 +311,10 @@ void Messineria<T>::olvideAlabarloUnPocoMas()
  * PRE: Hay adeptos en la Messineria y no hay Elegido.
  */
 template<class T>
-void Messineria<T>::escogerElegido() {
-
+void Messineria<T>::escogerElegido() 
+{
+	bElegido = true;
+	ptrElegido = ptrAlabando;
 }
 
 /*
@@ -316,7 +323,7 @@ void Messineria<T>::escogerElegido() {
 template<class T>
 bool Messineria<T>::hayElegido() const
 {
-
+	return bElegido;
 }
 
 /*
@@ -325,7 +332,8 @@ bool Messineria<T>::hayElegido() const
 * PRE: hay Elegido en la Messinería.
 */
 template<class T>
-void Messineria<T>::traidor() {
+void Messineria<T>::traidor() 
+{
 
 }
 
