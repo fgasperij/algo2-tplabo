@@ -143,13 +143,13 @@ class Messineria {
 	 */
 	struct nodoAdepto {
 		T tAdepto;
-		nodoAdepto* nAdPtr_Proximo;
-		nodoAdepto* nAdPtr_Anterior;	
+		nodoAdepto* ptrProximo;
+		nodoAdepto* ptrAnterior;	
 	};
 
 	bool bElegido;
-	nodoAdepto* nAdPtr_Elegido;
-	nodoAdepto* nAdPtr_Alabando;
+	nodoAdepto* ptrElegido;
+	nodoAdepto* ptrAlabando;
 
 
 
@@ -165,9 +165,9 @@ ostream& operator<<(ostream& out, const Messineria<T>& a) {
  */	
 template<class T>
 Messineria<T>::Messineria() {
-	nAdPtr_Alabando = NULL;
+	ptrAlabando = NULL;
 	bElegido = false;
-	nAdPtr_Elegido = NULL;
+	ptrElegido = NULL;
 }
 
 /*
@@ -194,32 +194,32 @@ Messineria<T>::~Messineria() {
 template<class T>
 void Messineria<T>::golDeMessi(const T& tNuevoAdepto)
 {
-	nodoAdepto* nAdPtr_NuevoAdepto = new (nodoAdepto);
-	nAdPtr_NuevoAdepto->tAdepto = T (tNuevoAdepto);
-	nodoAdepto* nAdPtr_agregarAtras = NULL;
+	nodoAdepto* ptrNuevoAdepto = new (nodoAdepto);
+	ptrNuevoAdepto->tAdepto = T (tNuevoAdepto);
+	nodoAdepto* ptragregarAtras = NULL;
 	
 	// if there's no follower
-	if (nAdPtr_Alabando == NULL) {
-		nAdPtr_Alabando = nAdPtr_NuevoAdepto;
-		nAdPtr_NuevoAdepto->nAdPtr_Proximo = nAdPtr_NuevoAdepto;
-		nAdPtr_NuevoAdepto->nAdPtr_Anterior = nAdPtr_NuevoAdepto;
+	if (ptrAlabando == NULL) {
+		ptrAlabando = ptrNuevoAdepto;
+		ptrNuevoAdepto->ptrProximo = ptrNuevoAdepto;
+		ptrNuevoAdepto->ptrAnterior = ptrNuevoAdepto;
 		return;
 	}
 
 	if (bElegido) {
-		nAdPtr_agregarAtras = nAdPtr_Elegido;
+		ptragregarAtras = ptrElegido;
 	} else {	
-		nAdPtr_agregarAtras = nAdPtr_Alabando;
+		ptragregarAtras = ptrAlabando;
 	}
 	 
-	nodoAdepto* nAdPtrAnteriorAgregarAtras = nAdPtr_agregarAtras->nAdPtr_Anterior;
+	nodoAdepto* nAdPtrAnteriorAgregarAtras = ptragregarAtras->ptrAnterior;
 	// new follower			
-	nAdPtr_NuevoAdepto->nAdPtr_Proximo = nAdPtr_agregarAtras;
-	nAdPtr_NuevoAdepto->nAdPtr_Anterior = nAdPtr_agregarAtras->nAdPtr_Anterior;			
+	ptrNuevoAdepto->ptrProximo = ptragregarAtras;
+	ptrNuevoAdepto->ptrAnterior = ptragregarAtras->ptrAnterior;			
 	// previous current worshipper
-	nAdPtrAnteriorAgregarAtras->nAdPtr_Proximo = nAdPtr_NuevoAdepto;
+	nAdPtrAnteriorAgregarAtras->ptrProximo = ptrNuevoAdepto;
 	// current worshipper
-	nAdPtr_agregarAtras->nAdPtr_Anterior = nAdPtr_NuevoAdepto;
+	ptragregarAtras->ptrAnterior = ptrNuevoAdepto;
 }
 	
 /*
@@ -251,7 +251,7 @@ const T& Messineria<T>::buscarAdepto(const T& sale) const
 template<class T>
 const T& Messineria<T>::adeptoAlabando() const
 {
-	return nAdPtr_Alabando->tAdepto;
+	return ptrAlabando->tAdepto;
 }
 	
 /*
@@ -341,17 +341,17 @@ template<class T>
 int Messineria<T>::tamanio() const
 {
 	// there's always a follower worshipping
-	if (this->nAdPtr_Alabando == NULL)
+	if (this->ptrAlabando == NULL)
 		return 0;
 
 	// there's at least the one that is worshipping at the moment
 	int tamanio = 1;
-	nodoAdepto* nAdPtr_AdeptoActual = new (nodoAdepto);	
-	nAdPtr_AdeptoActual = this->nAdPtr_Alabando;
+	nodoAdepto* ptrAdeptoActual = new (nodoAdepto);	
+	ptrAdeptoActual = this->ptrAlabando;
 	
-	while (nAdPtr_AdeptoActual->nAdPtr_Proximo != this->nAdPtr_Alabando) {
+	while (ptrAdeptoActual->ptrProximo != this->ptrAlabando) {
 		tamanio++;
-		nAdPtr_AdeptoActual = nAdPtr_AdeptoActual->nAdPtr_Proximo;
+		ptrAdeptoActual = ptrAdeptoActual->ptrProximo;
 	}
 
 	return tamanio;
