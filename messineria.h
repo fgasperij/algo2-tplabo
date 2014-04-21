@@ -133,11 +133,6 @@ class Messineria {
 		return *this;
 	}
 
-	/**
-	 * Buscar un adepto en la messineria
-	 */ 
-	const T& buscarAdepto(const T&) const;	 
-
 	/*
 	 * Aca va la implementación del adepto.
 	 */
@@ -146,6 +141,11 @@ class Messineria {
 		nodoAdepto* ptrProximo;
 		nodoAdepto* ptrAnterior;	
 	};
+
+	/**
+	 * Buscar un adepto en la messineria
+	 */ 
+	nodoAdepto* buscarAdepto(const T&);	 
 
 	bool bElegido;
 	nodoAdepto* ptrElegido;
@@ -196,7 +196,7 @@ void Messineria<T>::golDeMessi(const T& tNuevoAdepto)
 {
 	nodoAdepto* ptrNuevoAdepto = new (nodoAdepto);
 	ptrNuevoAdepto->tAdepto = T (tNuevoAdepto);
-	nodoAdepto* ptragregarAtras = NULL;
+	nodoAdepto* ptrAgregarAtras = NULL;
 	
 	// if there's no follower
 	if (ptrAlabando == NULL) {
@@ -207,19 +207,19 @@ void Messineria<T>::golDeMessi(const T& tNuevoAdepto)
 	}
 
 	if (bElegido) {
-		ptragregarAtras = ptrElegido;
+		ptrAgregarAtras = ptrElegido;
 	} else {	
-		ptragregarAtras = ptrAlabando;
+		ptrAgregarAtras = ptrAlabando;
 	}
 	 
-	nodoAdepto* nAdPtrAnteriorAgregarAtras = ptragregarAtras->ptrAnterior;
+	nodoAdepto* ptrAnteriorAgregarAtras = ptrAgregarAtras->ptrAnterior;
 	// new follower			
-	ptrNuevoAdepto->ptrProximo = ptragregarAtras;
-	ptrNuevoAdepto->ptrAnterior = ptragregarAtras->ptrAnterior;			
+	ptrNuevoAdepto->ptrProximo = ptrAgregarAtras;
+	ptrNuevoAdepto->ptrAnterior = ptrAgregarAtras->ptrAnterior;			
 	// previous current worshipper
-	nAdPtrAnteriorAgregarAtras->ptrProximo = ptrNuevoAdepto;
+	ptrAnteriorAgregarAtras->ptrProximo = ptrNuevoAdepto;
 	// current worshipper
-	ptragregarAtras->ptrAnterior = ptrNuevoAdepto;
+	ptrAgregarAtras->ptrAnterior = ptrNuevoAdepto;
 }
 	
 /*
@@ -227,20 +227,41 @@ void Messineria<T>::golDeMessi(const T& tNuevoAdepto)
  * el turno de alabar, debe pasar al siguiente (en caso de que haya).
  */
 template<class T>
-void Messineria<T>::golDeCristiano(const T& sale) 
+void Messineria<T>::golDeCristiano(const T& tSale) 
 {
-	T* salgo = this->buscarAdepto(sale);
-}
-template<class T>
-const T& Messineria<T>::buscarAdepto(const T& sale) const
-{
-	// T* adeptoActual = new (T);
-	// T* adeptoActual = this->alabando;
-	// while (adeptoActual->adepto != sale) {
-	// 	adeptoActual = adeptoAcual->proximo;
-	// }
+	nodoAdepto* ptrSale = buscarAdepto(tSale);
 
-	// return adeptoActual;
+	if (this->tamanio() == 1) {
+		delete ptrSale;
+		ptrAlabando = NULL;
+		bElegido = false;
+		ptrElegido = NULL;
+
+		return;
+	}
+
+	if (ptrAlabando == ptrSale) {
+		this->alabarMessi();
+	}
+	
+	nodoAdepto* ptrAnteriorSale = ptrSale->ptrAnterior;
+	nodoAdepto* ptrProximoSale = ptrSale->ptrProximo;	
+	
+	ptrAnteriorSale->ptrProximo = ptrSale->ptrProximo;
+	ptrProximoSale->ptrAnterior = ptrSale->ptrAnterior;
+
+	delete ptrSale; 
+}
+
+template<class T>
+typename Messineria<T>::nodoAdepto* Messineria<T>::buscarAdepto(const T& tSale)
+{
+	nodoAdepto* ptrAdeptoActual = ptrAlabando;	
+	while (ptrAdeptoActual->tAdepto != tSale) {
+		ptrAdeptoActual = ptrAdeptoActual->ptrProximo;
+	}
+
+	return ptrAdeptoActual;
 }
 	
 /*
