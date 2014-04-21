@@ -334,7 +334,7 @@ bool Messineria<T>::hayElegido() const
 template<class T>
 void Messineria<T>::traidor() 
 {
-
+	golDeCristiano(ptrElegido->tAdepto);
 }
 
 /*
