@@ -162,6 +162,24 @@ void check_dame_elegido()
 	ASSERT_EQ(messi.dameElegido(), 3);	
 }
 
+void check_traidor()
+{
+	Messineria<int> messi;
+	int adepto1 = 1, adepto2 = 2, adepto3 = 3;
+
+	messi.golDeMessi(adepto1);
+	messi.golDeMessi(adepto2);
+	messi.golDeMessi(adepto3);
+
+	messi.escogerElegido();
+	messi.traidor();
+
+	ASSERT_EQ(messi.tamanio(), 2);
+	ASSERT_EQ(messi.hayElegido(), false);
+	ASSERT_EQ(messi.adeptoAlabando(), 2);
+}
+
+
 int main() {	
   RUN_TEST(check_crear_messineria_vacia);
   RUN_TEST(check_agrega_un_elemento_correctamente);
@@ -172,6 +190,7 @@ int main() {
   RUN_TEST(check_olvide_alabarlo_un_poco_mas);
   RUN_TEST(check_escoger_elegido);
   RUN_TEST(check_dame_elegido);
+  RUN_TEST(check_traidor);
  
   return 0;
 }
