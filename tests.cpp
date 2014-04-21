@@ -7,7 +7,8 @@
 /*
  * Crea una messineria de int vacia y no agrega elementos
  */
-void check_crear_messineria_vacia() {
+void check_crear_messineria_vacia() 
+{
   Messineria<int> messi;
 
   ASSERT_EQ(messi.esVacia(), true);
@@ -45,10 +46,41 @@ void check_agrega_dos_elementos_correctamente()
 	ASSERT_EQ(alabando, 5);
 }
 
+void check_alabar_a_messi_tres_elementos()
+{
+	Messineria<int> messi;
+	int adepto1 = 1, adepto2 = 2, adepto3 = 3;
+	
+	messi.golDeMessi(adepto1);
+	messi.golDeMessi(adepto2);
+	messi.golDeMessi(adepto3);
+
+	ASSERT_EQ(messi.esVacia(), false);
+
+	ASSERT_EQ(messi.tamanio(), 3);
+
+	int alabando = messi.adeptoAlabando();
+	ASSERT_EQ(alabando, 1);
+
+	messi.alabarMessi();
+	alabando = messi.adeptoAlabando();
+	ASSERT_EQ(alabando, 2);
+
+	messi.alabarMessi();
+	alabando = messi.adeptoAlabando();
+	ASSERT_EQ(alabando, 3);	
+}
+
+void check_elimina_adepto_no_alabador_correctamente()
+{
+
+}
+
 int main() {	
   RUN_TEST(check_crear_messineria_vacia);
   RUN_TEST(check_agrega_un_elemento_correctamente);
   RUN_TEST(check_agrega_dos_elementos_correctamente);
+  RUN_TEST(check_alabar_a_messi_tres_elementos);
   return 0;
 }
 

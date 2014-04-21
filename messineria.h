@@ -262,8 +262,11 @@ const T& Messineria<T>::adeptoAlabando() const
  * PRE: Hay adeptos en la Messineria.
  */
 template<class T>
-const T& Messineria<T>::alabarMessi() {
+const T& Messineria<T>::alabarMessi() 
+{
+	ptrAlabando = ptrAlabando->ptrProximo;
 
+	return ptrAlabando->tAdepto;
 }
 
 /*
