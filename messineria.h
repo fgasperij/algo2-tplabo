@@ -142,14 +142,20 @@ class Messineria {
 		nodoAdepto* ptrAnterior;	
 	};
 
-	/**
-	 * Buscar un adepto en la messineria
-	 */ 
-	nodoAdepto* buscarAdepto(const T&);	 
-
 	bool bElegido;
 	nodoAdepto* ptrElegido;
 	nodoAdepto* ptrAlabando;
+
+	/**
+	 * Buscar un adepto en la messineria
+	 */ 
+	nodoAdepto* buscarAdepto(const T&);
+
+	void reset();
+
+
+
+	
 
 
 
@@ -160,11 +166,20 @@ ostream& operator<<(ostream& out, const Messineria<T>& a) {
 	return a.mostrarMessineria(out);
 }
 
+template<class T>
+Messineria<T>::reset()
+{
+	bElegido = false;
+	ptrElegido = NULL;
+	ptrAlabando = NULL;
+}
+
 /*
  * Crea una secta nueva sin adeptos.
  */	
 template<class T>
-Messineria<T>::Messineria() {
+Messineria<T>::Messineria() 
+{
 	ptrAlabando = NULL;
 	bElegido = false;
 	ptrElegido = NULL;
@@ -175,8 +190,9 @@ Messineria<T>::Messineria() {
  * es decir, cuando se borre una no debe borrar la otra.
  */	
 template<class T>
-Messineria<T>::Messineria(const Messineria<T>&) {
-
+Messineria<T>::Messineria(const Messineria<T>&) 
+{
+	
 }
 	
 /*
@@ -338,13 +354,16 @@ void Messineria<T>::traidor()
 }
 
 /*
-* El Elegido interrumpe el tuno y pasa a ser el que está alabando
+* El Elegido interrumpe el turno y pasa a ser el que está alabando
 *
 * PRE: hay Elegido en la Messinería.
 */
 template<class T>
-void Messineria<T>::interrumpirTurno() {
+void Messineria<T>::interrumpirTurno() 
+{
+	assert(bElegido);
 
+	ptrAlabando = ptrElegido;
 }
 
 /*
@@ -408,9 +427,22 @@ bool Messineria<T>::operator==(const Messineria<T>&) const
  * e1 fue agregado antes que e2): [e1, e2, e3]
  */
 template<class T>
-ostream& Messineria<T>::mostrarMessineria(ostream&) const
+ostream& Messineria<T>::mostrarMessineria(ostream& outStream) const
 {
+	nodoAdepto* ptrNodoActual = ptrAlabando;		
 
+	outStream << "[";
+	for(int i = 0; i < this->tamanio(); i++) {
+		char marcaElegido = "";
+		if (bElegido && ptrNodoActual == ptrElegido) marcaElegido = "*";
+
+		outStream << ptrNodoActual->tAdepto << marcaElegido;
+
+		if ( i != (this->tamanio() - 1) ) outStream << ", ";
+	}
+	outStream << "]";
+
+	return outStream;
 }
 
 
