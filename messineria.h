@@ -344,7 +344,15 @@ void Messineria<T>::traidor()
 */
 template<class T>
 void Messineria<T>::interrumpirTurno() {
-
+	/**
+	  *El anterior sigue siendo el anterior de quien fue interrumpido
+	  */
+	nodoAdepto adeptoInter = new nodoAdepto;
+    	adeptoInter->tAdepto = ptrElegido->tAdepto;
+    	adeptoInter->ptrProximo = ptrAlabando;
+    	adeptoInter->ptrAnterior = ptrAlabando->ptrAnterior;
+    
+    	ptrAlabando = adeptoInter;
 }
 
 /*
