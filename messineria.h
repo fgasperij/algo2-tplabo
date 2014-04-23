@@ -152,13 +152,6 @@ class Messineria {
 	nodoAdepto* buscarAdepto(const T&);
 
 	void reset();
-
-
-
-	
-
-
-
 };
 
 template<class T>
@@ -167,7 +160,7 @@ ostream& operator<<(ostream& out, const Messineria<T>& a) {
 }
 
 template<class T>
-Messineria<T>::reset()
+void Messineria<T>::reset()
 {
 	bElegido = false;
 	ptrElegido = NULL;
@@ -180,9 +173,7 @@ Messineria<T>::reset()
 template<class T>
 Messineria<T>::Messineria() 
 {
-	ptrAlabando = NULL;
-	bElegido = false;
-	ptrElegido = NULL;
+	this->reset();
 }
 
 /*
@@ -190,16 +181,69 @@ Messineria<T>::Messineria()
  * es decir, cuando se borre una no debe borrar la otra.
  */	
 template<class T>
-Messineria<T>::Messineria(const Messineria<T>&) 
+Messineria<T>::Messineria(const Messineria<T>& other) 
 {
-	
+	bElegido = other.bElegido;
+
+	if (other.esVacia()) {
+		this->reset();
+		return;
+	}
+
+	nodoAdepto* ptrThisAlabando = new nodoAdepto;
+	ptrThisAlabando->tAdepto = T (other.ptrAlabando->tAdepto);
+	ptrAlabando = ptrThisAlabando;
+
+	if (other.tamanio() == 1) {
+		ptrAlabando->ptrProximo = ptrAlabando;
+		ptrAlabando->ptrAnterior = ptrAlabando;
+
+		if (other.hayElegido()) {
+			ptrElegido = ptrAlabando;
+		}		
+
+		return;
+	}
+
+	nodoAdepto* ptrNodoAnterior = ptrAlabando;
+	nodoAdepto* nodoActualOther = other.ptrAlabando->ptrProximo;
+	nodoAdepto* nodoActualCopy;
+
+	for (int i = 1; i < other.tamanio(); i++) {
+		nodoActualCopy = new nodoAdepto;
+		nodoActualCopy->tAdepto = T (nodoActualOther->tAdepto);
+		nodoActualCopy->ptrAnterior = ptrNodoAnterior;
+
+		ptrNodoAnterior->ptrProximo = nodoActualCopy;
+
+		if (other.bElegido && nodoActualOther == other.ptrElegido) {
+			ptrElegido = nodoActualCopy;
+		}
+
+		nodoActualOther = nodoActualOther->ptrProximo;
+	}
+
+	nodoActualCopy->ptrProximo = ptrAlabando;
+	ptrAlabando->ptrAnterior = nodoActualCopy;
 }
 	
 /*
  * Acordarse de liberar toda la memoria!
  */	 
 template<class T>
-Messineria<T>::~Messineria() {
+Messineria<T>::~Messineria() 
+{
+	if (this->esVacia())
+		return;
+
+	nodoAdepto* ptrNodoActual = ptrAlabando;
+	nodoAdepto* ptrTemporario;
+
+	while (ptrNodoActual != ptrAlabando) {
+		ptrTemporario = ptrNodoActual->ptrProximo;
+		delete ptrNodoActual;
+		ptrNodoActual = ptrTemporario;
+	}
 }
 
 /*
@@ -210,19 +254,19 @@ Messineria<T>::~Messineria() {
 template<class T>
 void Messineria<T>::golDeMessi(const T& tNuevoAdepto)
 {
-	nodoAdepto* ptrNuevoAdepto = new (nodoAdepto);
+	nodoAdepto* ptrNuevoAdepto = new nodoAdepto;
 	ptrNuevoAdepto->tAdepto = T (tNuevoAdepto);
 	nodoAdepto* ptrAgregarAtras = NULL;
 	
 	// if there's no follower
-	if (ptrAlabando == NULL) {
+	if (esVacia()) {
 		ptrAlabando = ptrNuevoAdepto;
 		ptrNuevoAdepto->ptrProximo = ptrNuevoAdepto;
 		ptrNuevoAdepto->ptrAnterior = ptrNuevoAdepto;
 		return;
 	}
 
-	if (bElegido) {
+	if (hayElegido()) {
 		ptrAgregarAtras = ptrElegido;
 	} else {	
 		ptrAgregarAtras = ptrAlabando;
@@ -398,7 +442,7 @@ int Messineria<T>::tamanio() const
 
 	// there's at least the one that is worshipping at the moment
 	int tamanio = 1;
-	nodoAdepto* ptrAdeptoActual = new (nodoAdepto);	
+	nodoAdepto* ptrAdeptoActual;	
 	ptrAdeptoActual = this->ptrAlabando;
 	
 	while (ptrAdeptoActual->ptrProximo != this->ptrAlabando) {
@@ -413,9 +457,30 @@ int Messineria<T>::tamanio() const
  * Devuelve true si las Messinerias son iguales.
  */
 template<class T>
-bool Messineria<T>::operator==(const Messineria<T>&) const
+bool Messineria<T>::operator==(const Messineria<T>& other) const
 {
+	if ( other.esVacia() != esVacia() || 
+		 other.hayElegido() != hayElegido() ||
+		 other.tamanio() != tamanio() )
+		return false;
 
+	if (esVacia())
+		return true;
+
+	nodoAdepto* ptrNodoActual = ptrAlabando->ptrProximo;
+	nodoAdepto* ptrOtherNodoActual = other.ptrAlabando;
+	ptrOtherNodoActual = ptrOtherNodoActual->ptrProximo;
+
+	while (ptrNodoActual != ptrAlabando) {
+		if (ptrNodoActual->tAdepto != ptrOtherNodoActual->tAdepto)
+			return false;
+
+		ptrNodoActual = ptrNodoActual->ptrProximo;
+		ptrOtherNodoActual = ptrOtherNodoActual->ptrProximo;
+	}
+
+	if (ptrAlabando->tAdepto == other.ptrAlabando->tAdepto)
+		return true;
 }	
 
 /*
