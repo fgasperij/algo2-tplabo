@@ -137,14 +137,9 @@ class Messineria {
 	 * Aca va la implementación del adepto.
 	 */
 	struct nodoAdepto {		
-		T tAdepto;
+		T* ptrAdepto;
 		nodoAdepto* ptrProximo;
-		nodoAdepto* ptrAnterior;
-		
-		nodoAdepto(T adepto)
-		{
-			tAdepto = adepto;
-		}
+		nodoAdepto* ptrAnterior;			
 	};
 
 	bool bElegido;
@@ -195,7 +190,8 @@ Messineria<T>::Messineria(const Messineria<T>& other)
 		return;
 	}
 
-	nodoAdepto* ptrThisAlabando = new nodoAdepto (other.ptrAlabando->tAdepto);	
+	nodoAdepto* ptrThisAlabando = new nodoAdepto;
+	ptrThisAlabando->ptrAdepto = new T(*other.ptrAlabando->ptrAdepto);
 	ptrAlabando = ptrThisAlabando;
 
 	if (other.tamanio() == 1) {
@@ -214,7 +210,8 @@ Messineria<T>::Messineria(const Messineria<T>& other)
 	nodoAdepto* nodoActualThis;
 
 	for (int i = 1; i < other.tamanio(); i++) {
-		nodoActualThis = new nodoAdepto (nodoActualOther->tAdepto);
+		nodoActualThis = new nodoAdepto;
+		nodoActualThis->ptrAdepto = new T (*nodoActualOther->ptrAdepto);
 		nodoActualThis->ptrAnterior = ptrNodoAnteriorThis;
 
 		ptrNodoAnteriorThis->ptrProximo = nodoActualThis;
@@ -244,15 +241,18 @@ Messineria<T>::~Messineria()
 	nodoAdepto* ptrTemporario;
 	
 	if (tamanio() == 1) {
+		delete ptrAlabando->ptrAdepto;
 		delete ptrAlabando;
 		return;
 	}
 	
 	ptrNodoActual = ptrAlabando->ptrProximo;
+	delete ptrAlabando->ptrAdepto;
 	delete ptrAlabando;
 
 	while (ptrNodoActual != ptrAlabando) {
 		ptrTemporario = ptrNodoActual->ptrProximo;
+		delete ptrNodoActual->ptrAdepto;
 		delete ptrNodoActual;
 		ptrNodoActual = ptrTemporario;
 	}
@@ -266,7 +266,8 @@ Messineria<T>::~Messineria()
 template<class T>
 void Messineria<T>::golDeMessi(const T& tNuevoAdepto)
 {
-	nodoAdepto* ptrNuevoAdepto = new nodoAdepto (tNuevoAdepto);	
+	nodoAdepto* ptrNuevoAdepto = new nodoAdepto;
+	ptrNuevoAdepto->ptrAdepto = new T (tNuevoAdepto);
 	
 	// if there's no follower
 	if (esVacia()) {
@@ -303,6 +304,7 @@ void Messineria<T>::golDeCristiano(const T& tSale)
 	nodoAdepto* ptrSale = buscarAdepto(tSale);
 
 	if (this->tamanio() == 1) {
+		delete ptrSale->ptrAdepto;
 		delete ptrSale;
 		ptrAlabando = NULL;
 		bElegido = false;
@@ -325,7 +327,8 @@ void Messineria<T>::golDeCristiano(const T& tSale)
 	
 	ptrAnteriorSale->ptrProximo = ptrSale->ptrProximo;
 	ptrProximoSale->ptrAnterior = ptrSale->ptrAnterior;
-
+	
+	delete ptrSale->ptrAdepto;
 	delete ptrSale; 
 }
 
@@ -333,7 +336,7 @@ template<class T>
 typename Messineria<T>::nodoAdepto* Messineria<T>::buscarAdepto(const T& tSale)
 {
 	nodoAdepto* ptrAdeptoActual = ptrAlabando;	
-	while (ptrAdeptoActual->tAdepto != tSale) {
+	while (*ptrAdeptoActual->ptrAdepto != tSale) {
 		ptrAdeptoActual = ptrAdeptoActual->ptrProximo;
 	}
 
@@ -348,7 +351,7 @@ typename Messineria<T>::nodoAdepto* Messineria<T>::buscarAdepto(const T& tSale)
 template<class T>
 const T& Messineria<T>::adeptoAlabando() const
 {
-	return ptrAlabando->tAdepto;
+	return *ptrAlabando->ptrAdepto;
 }
 	
 /*
@@ -363,7 +366,7 @@ const T& Messineria<T>::alabarMessi()
 {
 	ptrAlabando = ptrAlabando->ptrProximo;
 
-	return ptrAlabando->tAdepto;
+	return *ptrAlabando->ptrAdepto;
 }
 
 /*
@@ -405,7 +408,7 @@ bool Messineria<T>::hayElegido() const
 template<class T>
 void Messineria<T>::traidor() 
 {
-	golDeCristiano(ptrElegido->tAdepto);
+	golDeCristiano(*ptrElegido->ptrAdepto);
 }
 
 /*
@@ -429,7 +432,7 @@ void Messineria<T>::interrumpirTurno()
 template<class T>
 const T& Messineria<T>::dameElegido() const
 {
-	return ptrElegido->tAdepto;
+	return *ptrElegido->ptrAdepto;
 }	
 
 /*
@@ -483,14 +486,14 @@ bool Messineria<T>::operator==(const Messineria<T>& other) const
 	ptrOtherNodoActual = ptrOtherNodoActual->ptrProximo;
 
 	while (ptrNodoActual != ptrAlabando) {
-		if (ptrNodoActual->tAdepto != ptrOtherNodoActual->tAdepto)
+		if (ptrNodoActual->ptrAdepto != ptrOtherNodoActual->ptrAdepto)
 			return false;
 
 		ptrNodoActual = ptrNodoActual->ptrProximo;
 		ptrOtherNodoActual = ptrOtherNodoActual->ptrProximo;
 	}
 
-	if (ptrAlabando->tAdepto == other.ptrAlabando->tAdepto)
+	if (ptrAlabando->ptrAdepto == other.ptrAlabando->ptrAdepto)
 		return true;
 }	
 
@@ -509,7 +512,7 @@ ostream& Messineria<T>::mostrarMessineria(ostream& outStream) const
 
 	outStream << "[";
 	for(int i = 0; i < this->tamanio(); i++) {		
-		outStream << ptrNodoActual->tAdepto;
+		outStream << ptrNodoActual->ptrAdepto;
 		
 		if (bElegido && ptrNodoActual == ptrElegido) outStream << "*";
 		
