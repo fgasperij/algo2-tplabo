@@ -136,10 +136,15 @@ class Messineria {
 	/*
 	 * Aca va la implementación del adepto.
 	 */
-	struct nodoAdepto {
+	struct nodoAdepto {		
 		T tAdepto;
 		nodoAdepto* ptrProximo;
-		nodoAdepto* ptrAnterior;	
+		nodoAdepto* ptrAnterior;
+		
+		nodoAdepto(T adepto)
+		{
+			tAdepto = adepto;
+		}
 	};
 
 	bool bElegido;
@@ -190,8 +195,7 @@ Messineria<T>::Messineria(const Messineria<T>& other)
 		return;
 	}
 
-	nodoAdepto* ptrThisAlabando = new nodoAdepto;
-	ptrThisAlabando->tAdepto = T (other.ptrAlabando->tAdepto);
+	nodoAdepto* ptrThisAlabando = new nodoAdepto (other.ptrAlabando->tAdepto);	
 	ptrAlabando = ptrThisAlabando;
 
 	if (other.tamanio() == 1) {
@@ -210,8 +214,7 @@ Messineria<T>::Messineria(const Messineria<T>& other)
 	nodoAdepto* nodoActualThis;
 
 	for (int i = 1; i < other.tamanio(); i++) {
-		nodoActualThis = new nodoAdepto;
-		nodoActualThis->tAdepto = T (nodoActualOther->tAdepto);
+		nodoActualThis = new nodoAdepto (nodoActualOther->tAdepto);
 		nodoActualThis->ptrAnterior = ptrNodoAnteriorThis;
 
 		ptrNodoAnteriorThis->ptrProximo = nodoActualThis;
@@ -239,6 +242,14 @@ Messineria<T>::~Messineria()
 
 	nodoAdepto* ptrNodoActual = ptrAlabando;
 	nodoAdepto* ptrTemporario;
+	
+	if (tamanio() == 1) {
+		delete ptrAlabando;
+		return;
+	}
+	
+	ptrNodoActual = ptrAlabando->ptrProximo;
+	delete ptrAlabando;
 
 	while (ptrNodoActual != ptrAlabando) {
 		ptrTemporario = ptrNodoActual->ptrProximo;
@@ -255,9 +266,7 @@ Messineria<T>::~Messineria()
 template<class T>
 void Messineria<T>::golDeMessi(const T& tNuevoAdepto)
 {
-	nodoAdepto* ptrNuevoAdepto = new nodoAdepto;
-	ptrNuevoAdepto->tAdepto = T (tNuevoAdepto);
-	nodoAdepto* ptrAgregarAtras = NULL;
+	nodoAdepto* ptrNuevoAdepto = new nodoAdepto (tNuevoAdepto);	
 	
 	// if there's no follower
 	if (esVacia()) {
@@ -266,7 +275,8 @@ void Messineria<T>::golDeMessi(const T& tNuevoAdepto)
 		ptrNuevoAdepto->ptrAnterior = ptrNuevoAdepto;
 		return;
 	}
-
+	
+	nodoAdepto* ptrAgregarAtras = NULL;
 	if (hayElegido()) {
 		ptrAgregarAtras = ptrElegido;
 	} else {	
