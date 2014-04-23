@@ -196,6 +196,40 @@ void check_interrumpir_turno()
 	ASSERT_EQ(messi.adeptoAlabando(), 2);
 }
 
+void check_mostrar_messineria()
+{
+	Messineria<int> messi;
+	int adepto1 = 1, adepto2 = 2, adepto3 = 3;
+
+	messi.golDeMessi(adepto1);
+	messi.golDeMessi(adepto2);
+	messi.golDeMessi(adepto3);
+		
+	cout << messi << endl;
+	
+	messi.escogerElegido();
+	
+	cout << messi << endl;
+	
+	messi.alabarMessi();
+	
+	cout << messi << endl;
+}
+
+void check_constructor_por_copia()
+{
+	Messineria<int> messi;
+	int adepto1 = 1, adepto2 = 2, adepto3 = 3, adepto4 = 4;
+
+	messi.golDeMessi(adepto1);
+	messi.golDeMessi(adepto2);
+	messi.golDeMessi(adepto3);
+	messi.golDeMessi(adepto4);
+	
+	Messineria<int> messiCopiado = Messineria<int> (messi);	
+	
+	cout << messiCopiado;
+}
 
 int main() {	
   RUN_TEST(check_crear_messineria_vacia);
@@ -209,6 +243,8 @@ int main() {
   RUN_TEST(check_dame_elegido);
   RUN_TEST(check_traidor);
   RUN_TEST(check_interrumpir_turno);
+  //RUN_TEST(check_mostrar_messineria);
+  RUN_TEST(check_constructor_por_copia);
 
   return 0;
 }

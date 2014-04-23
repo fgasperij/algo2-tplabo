@@ -186,7 +186,7 @@ Messineria<T>::Messineria(const Messineria<T>& other)
 	bElegido = other.bElegido;
 
 	if (other.esVacia()) {
-		this->reset();
+		reset();
 		return;
 	}
 
@@ -205,26 +205,27 @@ Messineria<T>::Messineria(const Messineria<T>& other)
 		return;
 	}
 
-	nodoAdepto* ptrNodoAnterior = ptrAlabando;
+	nodoAdepto* ptrNodoAnteriorThis = ptrAlabando;
 	nodoAdepto* nodoActualOther = other.ptrAlabando->ptrProximo;
-	nodoAdepto* nodoActualCopy;
+	nodoAdepto* nodoActualThis;
 
 	for (int i = 1; i < other.tamanio(); i++) {
-		nodoActualCopy = new nodoAdepto;
-		nodoActualCopy->tAdepto = T (nodoActualOther->tAdepto);
-		nodoActualCopy->ptrAnterior = ptrNodoAnterior;
+		nodoActualThis = new nodoAdepto;
+		nodoActualThis->tAdepto = T (nodoActualOther->tAdepto);
+		nodoActualThis->ptrAnterior = ptrNodoAnteriorThis;
 
-		ptrNodoAnterior->ptrProximo = nodoActualCopy;
+		ptrNodoAnteriorThis->ptrProximo = nodoActualThis;
 
 		if (other.bElegido && nodoActualOther == other.ptrElegido) {
-			ptrElegido = nodoActualCopy;
+			ptrElegido = nodoActualThis;
 		}
 
 		nodoActualOther = nodoActualOther->ptrProximo;
+		ptrNodoAnteriorThis = nodoActualThis;
 	}
 
-	nodoActualCopy->ptrProximo = ptrAlabando;
-	ptrAlabando->ptrAnterior = nodoActualCopy;
+	nodoActualThis->ptrProximo = ptrAlabando;
+	ptrAlabando->ptrAnterior = nodoActualThis;
 }
 	
 /*
@@ -494,16 +495,17 @@ bool Messineria<T>::operator==(const Messineria<T>& other) const
 template<class T>
 ostream& Messineria<T>::mostrarMessineria(ostream& outStream) const
 {
-	nodoAdepto* ptrNodoActual = ptrAlabando;		
+	nodoAdepto* ptrNodoActual = ptrAlabando;
 
 	outStream << "[";
-	for(int i = 0; i < this->tamanio(); i++) {
-		char marcaElegido = "";
-		if (bElegido && ptrNodoActual == ptrElegido) marcaElegido = "*";
-
-		outStream << ptrNodoActual->tAdepto << marcaElegido;
-
+	for(int i = 0; i < this->tamanio(); i++) {		
+		outStream << ptrNodoActual->tAdepto;
+		
+		if (bElegido && ptrNodoActual == ptrElegido) outStream << "*";
+		
 		if ( i != (this->tamanio() - 1) ) outStream << ", ";
+		
+		ptrNodoActual = ptrNodoActual->ptrProximo;
 	}
 	outStream << "]";
 
