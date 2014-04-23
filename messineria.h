@@ -225,6 +225,7 @@ Messineria<T>::Messineria(const Messineria<T>& other)
 		ptrNodoAnteriorThis = nodoActualThis;
 	}
 
+	if (other.hayElegido() && other.ptrElegido == other.ptrAlabando) ptrElegido = ptrAlabando;
 	nodoActualThis->ptrProximo = ptrAlabando;
 	ptrAlabando->ptrAnterior = nodoActualThis;
 }
@@ -504,9 +505,9 @@ template<class T>
 ostream& Messineria<T>::mostrarMessineria(ostream& outStream) const
 {
 	nodoAdepto* ptrNodoActual = ptrAlabando;
-
+	//cout << " " << ptrElegido << " ";	
 	outStream << "[";
-	for(int i = 0; i < this->tamanio(); i++) {		
+	for(int i = 0; i < this->tamanio(); i++) {
 		outStream << ptrNodoActual->tAdepto;
 		
 		if (bElegido && ptrNodoActual == ptrElegido) outStream << "*";

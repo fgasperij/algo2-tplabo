@@ -225,10 +225,52 @@ void check_constructor_por_copia()
 	messi.golDeMessi(adepto2);
 	messi.golDeMessi(adepto3);
 	messi.golDeMessi(adepto4);
+	messi.escogerElegido();
 	
-	Messineria<int> messiCopiado = Messineria<int> (messi);	
+	Messineria<int> messiCopiado = Messineria<int> (messi);		
+}
+
+void check_messineria_de_messinerias()
+{
+	cout << endl;
 	
-	cout << messiCopiado;
+	Messineria<int> messi1;
+	int adepto1 = 1, adepto2 = 2, adepto3 = 3, adepto4 = 4;
+	messi1.golDeMessi(adepto1);
+	messi1.golDeMessi(adepto2);	
+	messi1.golDeMessi(adepto3);
+	messi1.golDeMessi(adepto4);
+	messi1.escogerElegido();
+	
+	cout << "messi1 " <<  messi1 << endl;
+	
+	Messineria<int> messi2;
+	adepto1 = 5;
+	messi2.golDeMessi(adepto1);
+	messi2.golDeMessi(adepto2);
+	messi2.golDeMessi(adepto3);
+	messi2.golDeMessi(adepto4);
+	messi2.alabarMessi();
+	messi2.escogerElegido();
+	
+	cout << "messi2 " << messi2 << endl;
+	
+	Messineria<int> messi3;
+	adepto1 = 8;
+	messi3.golDeMessi(adepto1);
+	messi3.golDeMessi(adepto2);
+	messi3.golDeMessi(adepto3);
+	messi3.golDeMessi(adepto4);	
+	
+	cout << "messi3 " << messi3 << endl;
+	
+	Messineria<Messineria<int> > messiDeMessis;		
+	messiDeMessis.golDeMessi(messi1);	
+	messiDeMessis.golDeMessi(messi2);
+	messiDeMessis.golDeMessi(messi3);	
+	messiDeMessis.escogerElegido();
+	
+	cout << messiDeMessis << endl;	
 }
 
 int main() {	
@@ -245,6 +287,7 @@ int main() {
   RUN_TEST(check_interrumpir_turno);
   //RUN_TEST(check_mostrar_messineria);
   RUN_TEST(check_constructor_por_copia);
+  RUN_TEST(check_messineria_de_messinerias);
 
   return 0;
 }
