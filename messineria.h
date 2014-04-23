@@ -141,10 +141,8 @@ class Messineria {
 		nodoAdepto* ptrProximo;
 		nodoAdepto* ptrAnterior;
 		
-		nodoAdepto(T adepto)
-		{
-			tAdepto = adepto;
-		}
+		nodoAdepto(const T& adepto) : tAdepto (adepto), ptrProximo (NULL), ptrAnterior (NULL)
+		{}
 	};
 
 	bool bElegido;
