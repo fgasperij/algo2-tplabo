@@ -227,7 +227,10 @@ void check_constructor_por_copia()
 	messi.golDeMessi(adepto4);
 	messi.escogerElegido();
 	
-	Messineria<int> messiCopiado = Messineria<int> (messi);		
+	Messineria<int> messiCopiado (messi);
+	
+	cout << messi << endl;
+	cout << messiCopiado << endl;
 }
 
 void check_messineria_de_messinerias()
@@ -270,7 +273,74 @@ void check_messineria_de_messinerias()
 	messiDeMessis.golDeMessi(messi3);	
 	messiDeMessis.escogerElegido();
 	
-	cout << messiDeMessis << endl;	
+	cout << messiDeMessis << endl;
+	
+	Messineria<Messineria<int> > messiDeMessis2 (messiDeMessis);
+	
+	cout << messiDeMessis2 << endl;
+	
+	messiDeMessis2.golDeCristiano(messi1);
+	Messineria<int> messi4;
+	messiDeMessis2.golDeMessi(messi4);
+	
+	cout << messiDeMessis2 << endl;
+	cout << messiDeMessis << endl;
+}
+
+void check_operator_igual_igual ()
+{
+	Messineria<int> messi1;
+	int adepto1 = 1, adepto2 = 2, adepto3 = 3, adepto4 = 4;
+	messi1.golDeMessi(adepto1);
+	messi1.golDeMessi(adepto2);	
+	messi1.golDeMessi(adepto3);
+	messi1.golDeMessi(adepto4);
+	messi1.escogerElegido();
+	
+	cout << "messi1 " <<  messi1 << endl;
+	
+	Messineria<int> messi2;
+	messi2.golDeMessi(adepto1);
+	messi2.golDeMessi(adepto2);
+	messi2.golDeMessi(adepto3);
+	messi2.golDeMessi(adepto4);
+	messi2.alabarMessi();
+	messi2.escogerElegido();
+	messi2.alabarMessi();
+	messi2.alabarMessi();
+	messi2.alabarMessi();
+	
+	cout << "messi2 " << messi2 << endl;
+	
+	bool sonIguales = (messi1 == messi2);	
+	cout << "Son iguales: " << sonIguales << endl;
+}
+
+void check_operator_igual_igual_interrumpir()
+{
+	Messineria<int> messi1;
+	int adepto1 = 1, adepto2 = 2, adepto3 = 3, adepto4 = 4;
+	messi1.golDeMessi(adepto1);
+	messi1.golDeMessi(adepto2);	
+	messi1.golDeMessi(adepto3);
+	messi1.golDeMessi(adepto4);
+	messi1.escogerElegido();
+	
+	cout << "messi1 " <<  messi1 << endl;
+	
+	Messineria<int> messi2;
+	messi2.golDeMessi(adepto1);
+	messi2.golDeMessi(adepto2);
+	messi2.golDeMessi(adepto3);
+	messi2.golDeMessi(adepto4);
+	messi2.escogerElegido();
+	messi2.alabarMessi();
+	messi2.interrumpirTurno();
+	
+	cout << "messi2 " << messi2 << endl;
+	
+	bool sonIguales = (messi1 == messi2);	
+	cout << "Son iguales: " << sonIguales << endl;
 }
 
 int main() {	
@@ -285,9 +355,11 @@ int main() {
   RUN_TEST(check_dame_elegido);
   RUN_TEST(check_traidor);
   RUN_TEST(check_interrumpir_turno);
-  //RUN_TEST(check_mostrar_messineria);
+  RUN_TEST(check_mostrar_messineria);
   RUN_TEST(check_constructor_por_copia);
-  RUN_TEST(check_messineria_de_messinerias);
+  //RUN_TEST(check_messineria_de_messinerias);
+  RUN_TEST(check_operator_igual_igual);
+  RUN_TEST(check_operator_igual_igual_interrumpir);
 
   return 0;
 }

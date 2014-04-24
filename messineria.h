@@ -148,6 +148,8 @@ class Messineria {
 	bool bElegido;
 	nodoAdepto* ptrElegido;
 	nodoAdepto* ptrAlabando;
+	bool bInterrumpido;
+	nodoAdepto* ptrInterrumpido;
 
 	/**
 	 * Buscar un adepto en la messineria
@@ -166,6 +168,8 @@ template<class T>
 void Messineria<T>::reset()
 {
 	bElegido = false;
+	bInterrumpido = false;
+	ptrInterrumpido = NULL;
 	ptrElegido = NULL;
 	ptrAlabando = NULL;
 }
@@ -176,7 +180,7 @@ void Messineria<T>::reset()
 template<class T>
 Messineria<T>::Messineria() 
 {
-	this->reset();
+	reset();
 }
 
 /*
@@ -220,12 +224,17 @@ Messineria<T>::Messineria(const Messineria<T>& other)
 		if (other.bElegido && nodoActualOther == other.ptrElegido) {
 			ptrElegido = nodoActualThis;
 		}
+		
+		if (other.bInterrumpido && nodoActualOther == other.ptrInterrumpido) {
+			ptrInterrumpido = nodoActualThis;
+		}
 
 		nodoActualOther = nodoActualOther->ptrProximo;
 		ptrNodoAnteriorThis = nodoActualThis;
 	}
 
 	if (other.hayElegido() && other.ptrElegido == other.ptrAlabando) ptrElegido = ptrAlabando;
+	if (other.bInterrumpido && other.ptrInterrumpido == other.ptrAlabando) ptrInterrumpido = ptrAlabando;
 	nodoActualThis->ptrProximo = ptrAlabando;
 	ptrAlabando->ptrAnterior = nodoActualThis;
 }
@@ -319,6 +328,11 @@ void Messineria<T>::golDeCristiano(const T& tSale)
 		ptrElegido = NULL;
 	}
 	
+	if (ptrInterrumpido == ptrSale) {
+		bInterrumpido = false;
+		ptrInterrumpido = NULL;
+	}
+	
 	nodoAdepto* ptrAnteriorSale = ptrSale->ptrAnterior;
 	nodoAdepto* ptrProximoSale = ptrSale->ptrProximo;	
 	
@@ -332,7 +346,7 @@ template<class T>
 typename Messineria<T>::nodoAdepto* Messineria<T>::buscarAdepto(const T& tSale)
 {
 	nodoAdepto* ptrAdeptoActual = ptrAlabando;	
-	while (ptrAdeptoActual->tAdepto != tSale) {
+	while (!(ptrAdeptoActual->tAdepto == tSale)) {
 		ptrAdeptoActual = ptrAdeptoActual->ptrProximo;
 	}
 
@@ -360,7 +374,13 @@ const T& Messineria<T>::adeptoAlabando() const
 template<class T>
 const T& Messineria<T>::alabarMessi() 
 {
-	ptrAlabando = ptrAlabando->ptrProximo;
+	if (bInterrumpido) {
+		ptrAlabando = ptrInterrumpido;
+		bInterrumpido = false;
+		ptrInterrumpido = NULL;
+	} else {
+		ptrAlabando = ptrAlabando->ptrProximo;
+	}		
 
 	return ptrAlabando->tAdepto;
 }
@@ -372,7 +392,14 @@ const T& Messineria<T>::alabarMessi()
 template<class T>
 void Messineria<T>::olvideAlabarloUnPocoMas() 
 {
-	ptrAlabando = ptrAlabando->ptrAnterior;
+	if (bInterrumpido) {
+		ptrAlabando = ptrInterrumpido;
+		bInterrumpido = false;
+		ptrInterrumpido = NULL;
+	} else {
+		ptrAlabando = ptrAlabando->ptrAnterior;
+	}
+	
 }
 
 /*
@@ -417,6 +444,8 @@ void Messineria<T>::interrumpirTurno()
 {
 	assert(bElegido);
 
+	ptrInterrumpido = ptrAlabando;
+	bInterrumpido = true;
 	ptrAlabando = ptrElegido;
 }
 
@@ -471,7 +500,8 @@ bool Messineria<T>::operator==(const Messineria<T>& other) const
 {
 	if ( other.esVacia() != esVacia() || 
 		 other.hayElegido() != hayElegido() ||
-		 other.tamanio() != tamanio() )
+		 other.tamanio() != tamanio() ||
+		 other.bInterrumpido != bInterrumpido )
 		return false;
 
 	if (esVacia())
@@ -480,6 +510,14 @@ bool Messineria<T>::operator==(const Messineria<T>& other) const
 	nodoAdepto* ptrNodoActual = ptrAlabando->ptrProximo;
 	nodoAdepto* ptrOtherNodoActual = other.ptrAlabando;
 	ptrOtherNodoActual = ptrOtherNodoActual->ptrProximo;
+	
+	if ( !(ptrElegido->tAdepto == other.ptrElegido->tAdepto) ) return false;
+	
+	if (bInterrumpido) {	
+		if ( !(ptrInterrumpido->tAdepto == other.ptrInterrumpido->tAdepto) ) {
+			return false;
+		}
+	}	
 
 	while (ptrNodoActual != ptrAlabando) {
 		if (ptrNodoActual->tAdepto != ptrOtherNodoActual->tAdepto)
@@ -505,7 +543,7 @@ template<class T>
 ostream& Messineria<T>::mostrarMessineria(ostream& outStream) const
 {
 	nodoAdepto* ptrNodoActual = ptrAlabando;
-	//cout << " " << ptrElegido << " ";	
+		
 	outStream << "[";
 	for(int i = 0; i < this->tamanio(); i++) {
 		outStream << ptrNodoActual->tAdepto;
