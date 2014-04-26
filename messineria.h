@@ -157,6 +157,9 @@ class Messineria {
 	nodoAdepto* buscarAdepto(const T&);
 
 	void reset();
+
+	bool hayInterrumpido() const;
+
 };
 
 template<class T>
@@ -190,53 +193,70 @@ Messineria<T>::Messineria()
 template<class T>
 Messineria<T>::Messineria(const Messineria<T>& other) 
 {
-	bElegido = other.bElegido;
-
 	if (other.esVacia()) {
 		reset();
 		return;
 	}
 
-	nodoAdepto* ptrThisAlabando = new nodoAdepto (other.ptrAlabando->tAdepto);	
-	ptrAlabando = ptrThisAlabando;
+	ptrAlabando = new nodoAdepto (other.adeptoAlabando());
 
 	if (other.tamanio() == 1) {
 		ptrAlabando->ptrProximo = ptrAlabando;
-		ptrAlabando->ptrAnterior = ptrAlabando;
+		ptrAlabando->ptrAnterior = ptrAlabando;	
 
 		if (other.hayElegido()) {
+			bElegido = true;
 			ptrElegido = ptrAlabando;
-		}		
+		}
+
+		if (other.hayInterrumpido()) {
+			bInterrumpido = true;
+			ptrInterrumpido = ptrAlabando;
+		}			
 
 		return;
 	}
 
-	nodoAdepto* ptrNodoAnteriorThis = ptrAlabando;
-	nodoAdepto* nodoActualOther = other.ptrAlabando->ptrProximo;
-	nodoAdepto* nodoActualThis;
-
-	for (int i = 1; i < other.tamanio(); i++) {
-		nodoActualThis = new nodoAdepto (nodoActualOther->tAdepto);
-		nodoActualThis->ptrAnterior = ptrNodoAnteriorThis;
-
-		ptrNodoAnteriorThis->ptrProximo = nodoActualThis;
-
-		if (other.bElegido && nodoActualOther == other.ptrElegido) {
-			ptrElegido = nodoActualThis;
-		}
-		
-		if (other.bInterrumpido && nodoActualOther == other.ptrInterrumpido) {
-			ptrInterrumpido = nodoActualThis;
-		}
-
-		nodoActualOther = nodoActualOther->ptrProximo;
-		ptrNodoAnteriorThis = nodoActualThis;
+	if (other.hayElegido()) {
+		bElegido = true; 
+	} else {
+		bElegido = false;
 	}
 
-	if (other.hayElegido() && other.ptrElegido == other.ptrAlabando) ptrElegido = ptrAlabando;
-	if (other.bInterrumpido && other.ptrInterrumpido == other.ptrAlabando) ptrInterrumpido = ptrAlabando;
-	nodoActualThis->ptrProximo = ptrAlabando;
-	ptrAlabando->ptrAnterior = nodoActualThis;
+	if (other.hayInterrumpido()) {
+		bInterrumpido = true; 
+	} else {
+		bInterrumpido = false;
+	}
+
+	nodoAdepto* ptrActualThis;
+	nodoAdepto* ptrAnteriorThis = ptrAlabando;
+	nodoAdepto* ptrActualOther = other.ptrAlabando->ptrProximo;
+
+	while (ptrActualOther != other.ptrAlabando) {
+	    ptrActualThis = new nodoAdepto (ptrActualOther->tAdepto);
+	    ptrActualThis->ptrAnterior = ptrAnteriorThis;
+
+	    ptrAnteriorThis->ptrProximo = ptrActualThis;
+
+	    if (other.hayElegido() && other.ptrElegido == ptrActualOther)
+	    	ptrElegido = ptrActualThis;
+
+	    if (other.hayInterrumpido() && other.ptrInterrumpido == ptrActualOther)
+	    	ptrInterrumpido = ptrActualThis;
+
+	    ptrAnteriorThis = ptrActualThis;
+	    ptrActualOther = ptrActualOther->ptrProximo;
+	}
+
+	ptrActualThis->ptrProximo = ptrAlabando;
+	ptrAlabando->ptrAnterior = ptrActualThis;
+
+	if (other.hayElegido() && other.ptrElegido == other.ptrAlabando)
+	    	ptrElegido = ptrAlabando;
+
+    if (other.hayInterrumpido() && other.ptrInterrumpido == ptrAlabando)
+    	ptrInterrumpido = ptrAlabando;
 }
 	
 /*
@@ -424,6 +444,15 @@ bool Messineria<T>::hayElegido() const
 }
 
 /*
+ * Indica si esta presente el Interrumpido entre los adeptos.
+ */
+template<class T>
+bool Messineria<T>::hayInterrumpido() const
+{
+	return bInterrumpido;
+}
+
+/*
 * Elimina de la secta al Elegido. 
 *
 * PRE: hay Elegido en la Messinería.
@@ -511,7 +540,9 @@ bool Messineria<T>::operator==(const Messineria<T>& other) const
 	nodoAdepto* ptrOtherNodoActual = other.ptrAlabando;
 	ptrOtherNodoActual = ptrOtherNodoActual->ptrProximo;
 	
-	if ( !(ptrElegido->tAdepto == other.ptrElegido->tAdepto) ) return false;
+	if (hayElegido()) {
+		if ( !(ptrElegido->tAdepto == other.ptrElegido->tAdepto) ) return false;
+	}
 	
 	if (bInterrumpido) {	
 		if ( !(ptrInterrumpido->tAdepto == other.ptrInterrumpido->tAdepto) ) {

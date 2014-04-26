@@ -273,17 +273,17 @@ void check_messineria_de_messinerias()
 	messiDeMessis.golDeMessi(messi3);	
 	messiDeMessis.escogerElegido();
 	
-	cout << messiDeMessis << endl;
+	cout << "messiDeMessis " << messiDeMessis << endl;
 	
-	Messineria<Messineria<int> > messiDeMessis2 (messiDeMessis);
+	// Messineria<Messineria<int> > messiDeMessis2 (messiDeMessis);
 	
-	cout << messiDeMessis2 << endl;
+	// cout << "messiDeMessis2 " << messiDeMessis2 << endl;
 	
-	messiDeMessis2.golDeCristiano(messi1);
+	// messiDeMessis2.golDeCristiano(messi1);
 	Messineria<int> messi4;
-	messiDeMessis2.golDeMessi(messi4);
+	// messiDeMessis2.golDeMessi(messi4);
 	
-	cout << messiDeMessis2 << endl;
+	// cout << messiDeMessis2 << endl;
 	cout << messiDeMessis << endl;
 }
 
@@ -357,7 +357,7 @@ int main() {
   RUN_TEST(check_interrumpir_turno);
   RUN_TEST(check_mostrar_messineria);
   RUN_TEST(check_constructor_por_copia);
-  //RUN_TEST(check_messineria_de_messinerias);
+  RUN_TEST(check_messineria_de_messinerias);
   RUN_TEST(check_operator_igual_igual);
   RUN_TEST(check_operator_igual_igual_interrumpir);
 
