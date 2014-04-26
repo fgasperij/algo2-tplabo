@@ -275,15 +275,15 @@ void check_messineria_de_messinerias()
 	
 	cout << "messiDeMessis " << messiDeMessis << endl;
 	
-	// Messineria<Messineria<int> > messiDeMessis2 (messiDeMessis);
+	Messineria<Messineria<int> > messiDeMessis2 (messiDeMessis);
 	
-	// cout << "messiDeMessis2 " << messiDeMessis2 << endl;
+	cout << "messiDeMessis2 " << messiDeMessis2 << endl;
 	
-	// messiDeMessis2.golDeCristiano(messi1);
+	messiDeMessis2.golDeCristiano(messi1);
 	Messineria<int> messi4;
-	// messiDeMessis2.golDeMessi(messi4);
+	messiDeMessis2.golDeMessi(messi4);
 	
-	// cout << messiDeMessis2 << endl;
+	cout << messiDeMessis2 << endl;
 	cout << messiDeMessis << endl;
 }
 
